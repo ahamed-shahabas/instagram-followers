@@ -86,14 +86,16 @@ button:hover{
 <h2>Login</h2>
 
 <input
-type="text"
-placeholder="Instagram username">
+type="email"
+id="email"
+placeholder="Email">
 
 <input
 type="password"
+id="password"
 placeholder="Password">
 
-<button onclick="goBack()">
+<button onclick="loginUser()">
 Login
 </button>
 
@@ -103,10 +105,62 @@ FollowerHub Access
 
 </div>
 
-<script>
-function goBack(){
-    window.location.href="index.html";
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getAuth,
+signInWithEmailAndPassword
 }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA5_RpvfgLdbBZTC16iOF3Ag-T1SgmYzFc",
+  authDomain: "instagram-991c8.firebaseapp.com",
+  projectId: "instagram-991c8",
+  storageBucket: "instagram-991c8.firebasestorage.app",
+  messagingSenderId: "1061261822058",
+  appId: "1:1061261822058:web:0db9915948489155962213",
+  measurementId: "G-RWV45N0CNH"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.loginUser = function(){
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+signInWithEmailAndPassword(
+auth,
+email,
+password
+)
+
+.then(() => {
+
+alert("Login Successful");
+
+window.location.href =
+"index.html";
+
+})
+
+.catch((error) => {
+
+alert(error.message);
+
+});
+
+}
+
 </script>
 
 </body>
