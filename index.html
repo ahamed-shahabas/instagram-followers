@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FollowerHub — Grow Beyond the Algorithm</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080a0f;
+  --surface: #0e1118;
+  --border: rgba(255,255,255,0.07);
+  --pink: #ff3cac;
+  --orange: #f7971e;
+  --purple: #a259ff;
+  --white: #f0f0f0;
+  --muted: #7a7f8e;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--pink);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, background 0.3s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,60,172,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: all 0.18s ease;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.35;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 22px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  background: rgba(8,10,15,0.6);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+.nav-logo span {
+  background: linear-gradient(90deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-pill {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  padding: 10px 22px;
+  border-radius: 40px;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 130px 6% 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.18;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+.blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation-duration: 14s; }
+.blob-2 { width: 500px; height: 500px; background: var(--pink); top: 50%; right: -150px; animation-duration: 10s; animation-delay: -4s; }
+.blob-3 { width: 400px; height: 400px; background: var(--orange); bottom: -100px; left: 30%; animation-duration: 16s; animation-delay: -7s; }
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.08); }
+}
+
+.hero-inner {
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Eyebrow */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(162,89,255,0.1);
+  border: 1px solid rgba(162,89,255,0.25);
+  padding: 7px 16px;
+  border-radius: 40px;
+  font-size: 12px;
+  color: var(--purple);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: fadeUp 0.7s ease both;
+}
+.eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--purple);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(46px, 5.5vw, 76px);
+  line-height: 1.03;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+.hero-title .line2 {
+  background: linear-gradient(100deg, var(--pink) 0%, var(--orange) 60%, #fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 44px;
+  font-weight: 300;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+
+.hero-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+.tag {
+  padding: 9px 18px;
+  border-radius: 40px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  color: #ccc;
+  background: rgba(255,255,255,0.04);
+  transition: border-color 0.2s, color 0.2s;
+}
+.tag:hover { border-color: var(--pink); color: var(--pink); }
+
+/* Card */
+.card {
+  background: linear-gradient(145deg, #12151f, #0e1118);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: fadeUp 0.7s 0.2s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
+}
+
+.card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+
+.card h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.card > p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.input-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+.input-icon {
+  position: absolute;
+  left: 18px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 15px;
+}
+input {
+  width: 100%;
+  padding: 17px 17px 17px 46px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--white);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+input::placeholder { color: var(--muted); }
+input:focus {
+  border-color: rgba(255,60,172,0.4);
+  background: rgba(255,255,255,0.06);
+}
+
+.btn-main {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,60,172,0.3); }
+.btn-main:hover::after { transform: translateX(100%); }
+
+.card-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.card-footer span {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* STATS STRIP */
+.stats-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 6%;
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* FEATURES */
+.features-section {
+  padding: 110px 6%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.section-eyebrow {
+  text-align: center;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--purple);
+  margin-bottom: 18px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -1.5px;
+  margin-bottom: 16px;
+}
+.section-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 17px;
+  max-width: 500px;
+  margin: 0 auto 60px;
+  line-height: 1.7;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 34px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.feat-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255,60,172,0.25);
+}
+.feat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pink), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feat-card:hover::before { opacity: 1; }
+
+.feat-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+.feat-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+.feat-card p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* TESTIMONIALS */
+.testi-section {
+  padding: 80px 6%;
+  background: linear-gradient(180deg, transparent, rgba(162,89,255,0.04), transparent);
+}
+.testi-grid {
+  max-width: 1100px;
+  margin: 50px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.testi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+}
+.testi-text {
+  font-size: 15px;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.testi-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.testi-name { font-size: 14px; font-weight: 600; }
+.testi-handle { font-size: 12px; color: var(--muted); }
+
+/* CTA SECTION */
+.cta-section {
+  padding: 110px 6%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(255,60,172,0.1), transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+.cta-btn {
+  display: inline-block;
+  margin-top: 36px;
+  padding: 18px 48px;
+  background: linear-gradient(90deg, var(--purple), var(--pink));
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+}
+.cta-btn:hover { transform: scale(1.04); box-shadow: 0 15px 40px rgba(255,60,172,0.35); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 36px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+}
+.footer-logo span {
+  background: linear-gradient(90deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 50px; }
+  .features-grid, .testi-grid { grid-template-columns: 1fr 1fr; }
+  .stats-strip { gap: 40px; }
+}
+@media (max-width: 600px) {
+  .features-grid, .testi-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Follower<span>Hub</span></div>
+  <div class="nav-pill">Instagram Growth Platform</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="eyebrow">Trusted by 40,000+ creators</div>
+      <h1 class="hero-title">
+        The Smarter Way<br>
+        <span class="line2">to Grow on<br>Instagram.</span>
+      </h1>
+      <p class="hero-sub">
+        Real strategies, real engagement, real growth — no bots, no shortcuts. Built for creators who want to build audiences that actually care.
+      </p>
+      <div class="hero-tags">
+        <div class="tag">🚀 Organic Growth</div>
+        <div class="tag">📊 Audience Analytics</div>
+        <div class="tag">🎯 Niche Targeting</div>
+        <div class="tag">⚡ Instant Insights</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Get Access</div>
+      <h2>Start Growing Today</h2>
+      <p>Join thousands of creators already scaling their reach with FollowerHub.</p>
+
+      <div class="input-wrap">
+        <span class="input-icon">@</span>
+        <input type="email" id="email" placeholder="Instagram email or username">
+      </div>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="password" placeholder="Password">
+      </div>
+
+      <button class="btn-main" onclick="handleLogin()">
+        Get Free Access →
+      </button>
+
+      <div class="card-footer">
+        <span>✓ No credit card</span>
+        <span>✓ Cancel anytime</span>
+        <span>✓ 100% private</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip reveal">
+  <div class="stat">
+    <div class="stat-num">2.4M+</div>
+    <div class="stat-label">Followers Generated</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">40K+</div>
+    <div class="stat-label">Active Creators</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">98%</div>
+    <div class="stat-label">Satisfaction Rate</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">3.2×</div>
+    <div class="stat-label">Avg. Engagement Lift</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-eyebrow">Why FollowerHub</div>
+  <h2 class="section-title">Everything you need to grow.</h2>
+  <p class="section-sub">A complete toolkit for Instagram creators who are serious about scaling.</p>
+
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">📈</div>
+      <h3>Growth Automation</h3>
+      <p>Smart scheduling and engagement tools that work while you sleep. Reach the right audience at the right time, every time.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🎯</div>
+      <h3>Precision Targeting</h3>
+      <p>Filter your audience by niche, location, interests, and behavior. Stop chasing followers — attract the ones who matter.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🔍</div>
+      <h3>Hashtag Intelligence</h3>
+      <p>Discover trending and niche hashtags that actually push your content to new, relevant eyeballs every single post.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">📊</div>
+      <h3>Deep Analytics</h3>
+      <p>Real-time dashboards tracking follower growth, story views, reach, saves, and engagement trends across all your posts.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🤝</div>
+      <h3>Collab Finder</h3>
+      <p>Get matched with creators in your niche for shoutouts, reels collabs, and cross-promotions that grow both audiences.</p>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🛡️</div>
+      <h3>Account Protection</h3>
+      <p>Our system operates within Instagram's guidelines. No risk of shadow bans or account suspension — ever.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="section-eyebrow">Social Proof</div>
+  <h2 class="section-title reveal">Real creators, real results.</h2>
+
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <p class="testi-text">"Went from 800 to 12K followers in 6 weeks. The targeting tools are insane — every new follower is genuinely interested in my content."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background: linear-gradient(135deg, #833ab4, #fd1d1d);">S</div>
+        <div>
+          <div class="testi-name">Sara K.</div>
+          <div class="testi-handle">@sarakreates · Lifestyle</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <p class="testi-text">"The hashtag tool alone changed everything. My Reels went from 200 views to 40K+ views consistently. Completely worth it."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background: linear-gradient(135deg, #f7971e, #ffd200);">M</div>
+        <div>
+          <div class="testi-name">Marcus T.</div>
+          <div class="testi-handle">@marcusfits · Fitness</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <p class="testi-text">"I was skeptical at first but the analytics dashboard gave me insights I couldn't find anywhere else. My engagement rate tripled."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background: linear-gradient(135deg, #a259ff, #3cefff);">L</div>
+        <div>
+          <div class="testi-name">Lena V.</div>
+          <div class="testi-handle">@lenavibe · Photography</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-eyebrow reveal">Ready?</div>
+  <h2 class="reveal">Stop posting into the void.<br><span style="background: linear-gradient(90deg,var(--pink),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Start growing today.</span></h2>
+  <p class="reveal" style="color:var(--muted); font-size:17px; margin-top:16px;">Join 40,000+ creators. Free to start. No credit card needed.</p>
+  <a href="loginpage.html" class="cta-btn reveal">Get Free Access →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Follower<span>Hub</span></div>
+  <div>© 2026 FollowerHub. All rights reserved.</div>
+  <div>Privacy · Terms · Support</div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  rx += (mx - rx) * 0.18;
+  ry += (my - ry) * 0.18;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('button, a, input, .feat-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.6)'; ring.style.borderColor = 'rgba(255,60,172,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'rgba(255,60,172,0.5)'; });
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// Login handler — goes to loginpage.html
+function handleLogin() {
+  window.location.href = 'loginpage.html';
+}
+</script>
+</body>
+</html>
